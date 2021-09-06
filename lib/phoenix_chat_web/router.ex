@@ -18,6 +18,10 @@ defmodule ChatWeb.Router do
     pipe_through :browser
 
     live "/", PageLive, :index
+
+    # Route below makes anything put after the slash to be put
+    # into an param named 'id'. 'RoomLive' handles the route.
+    live "/:id", RoomLive, :index
   end
 
   # Other scopes may use custom stacks.

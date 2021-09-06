@@ -9,8 +9,12 @@ defmodule ChatWeb.PageLive do
 
   @impl true
   def handle_event("get-random-room", _params, socket) do
-    Logger.info("Event fired: 'get-random-room'")
-    {:noreply, socket}
+    # Cocatenate a random slug to a slash string
+    random_slug = "/" <> MnemonicSlugs.generate_slug(4)
+    Logger.info(random_slug)
+
+    # LiveView's push_redirect() redirects to URL with the router
+    {:noreply, push_redirect(socket, to: random_slug)}
   end
 
 end
