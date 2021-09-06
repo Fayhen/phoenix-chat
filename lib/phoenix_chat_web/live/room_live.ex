@@ -14,6 +14,7 @@ defmodule ChatWeb.RoomLive do
     assign(socket,
       room_id: room_id,
       topic: topic,
+      message: "",
       messages: [%{uuid: UUID.uuid4(), content: "Anonymous user joined the chat."}],
       temporary_assigns: [messages: []]
     )}
@@ -25,7 +26,14 @@ defmodule ChatWeb.RoomLive do
   def handle_event("submit_message", %{"chat" => %{"message" => message}}, socket) do
     message = %{uuid: UUID.uuid4(), content: message}
     ChatWeb.Endpoint.broadcast(socket.assigns.topic, "new-message", message)
-    {:noreply, socket}
+    # Clear the form input by resetting the message assigned to its
+    # value to an empty string
+    {:noreply, assign(socket, message: "")}
+  end
+
+  def handle_event("form_update", %{"chat" => %{"message" => message}}, socket) do
+    Logger.info(message: message)
+    {:noreply, assign(socket, message: message)}
   end
 
   # Broadcasted events are handled by the 'handle_info()' function
